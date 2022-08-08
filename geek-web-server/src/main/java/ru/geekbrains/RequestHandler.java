@@ -6,9 +6,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class RequestHandler implements Runnable {
 
@@ -29,28 +26,19 @@ public class RequestHandler implements Runnable {
         ) {
             while (!input.ready()) ;
 
-            String firstLine = input.readLine();
-            String[] parts = firstLine.split(" ");
-            System.out.println(firstLine);
-            while (input.ready()) {
-                System.out.println(input.readLine());
-            }
+            RequestParser parser = new RequestParser(input);
+            System.out.println(parser.getRequest());
 
-            Path path = Paths.get(folder, parts[1]);
-            if (!Files.exists(path)) {
-                output.println("HTTP/1.1 404 NOT_FOUND");
-                output.println("Content-Type: text/html; charset=utf-8");
-                output.println();
-                output.println("<h1>Файл не найден!</h1>");
-                output.flush();
+            FileSystemService systemService = new FileSystemService(folder, parser.getPath());
+            ResponseService responseService = new ResponseService(output, systemService);
+
+            if (!systemService.isPathExist()) {
+                responseService.response(ResponseCode.CODE_404, "File is not found!");
+                System.out.println("Client disconnected!");
                 return;
             }
 
-            output.println("HTTP/1.1 200 OK");
-            output.println("Content-Type: text/html; charset=utf-8");
-            output.println();
-
-            Files.newBufferedReader(path).transferTo(output);
+            responseService.response(ResponseCode.CODE_200, "");
             System.out.println("Client disconnected!");
         } catch (IOException e) {
             e.printStackTrace();
