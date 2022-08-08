@@ -8,7 +8,12 @@ public class HttpResponse {
     private String body;
     private Map<String, String> headers;
 
-    public HttpResponse() {
+    public static HttpResponse create(int statusCode, String body, Map<String, String> headers) {
+        HttpResponse response = new HttpResponse();
+        response.setStatusCode(statusCode);
+        response.setBody(body);
+        response.setHeaders(headers);
+        return response;
     }
 
     public int getStatusCode() {

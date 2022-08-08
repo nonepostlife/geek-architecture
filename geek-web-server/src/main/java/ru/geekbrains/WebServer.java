@@ -1,5 +1,6 @@
 package ru.geekbrains;
 
+import ru.geekbrains.properties.ServerProperties;
 import ru.geekbrains.service.FileService;
 import ru.geekbrains.service.SocketService;
 
@@ -9,17 +10,17 @@ import java.net.Socket;
 
 public class WebServer {
 
-    private static String WWW = "www";
-
     public static void main(String[] args) {
-        try (ServerSocket serverSocket = new ServerSocket(8088)) {
+        ServerProperties serverProperties = new ServerProperties();
+
+        try (ServerSocket serverSocket = new ServerSocket(serverProperties.getPort())) {
             System.out.println("Server started!");
 
             while (true) {
                 Socket socket = serverSocket.accept();
                 System.out.println("New client connected!");
 
-                new Thread(new RequestHandler(new SocketService(socket), new FileService(WWW))).start();
+                new Thread(new RequestHandler(new SocketService(socket), new FileService(serverProperties.getDirectory()))).start();
             }
         } catch (IOException e) {
             e.printStackTrace();
