@@ -6,15 +6,17 @@ public class HttpRequest {
 
     private String method;
     private String path;
+    private String httpVersion;
     private Map<String, String> headers;
     private String body;
 
     public HttpRequest() {
     }
 
-    public HttpRequest(String method, String path, Map<String, String> headers, String body) {
+    public HttpRequest(String method, String path, String httpVersion, Map<String, String> headers, String body) {
         this.method = method;
         this.path = path;
+        this.httpVersion = httpVersion;
         this.headers = headers;
         this.body = body;
     }
@@ -49,5 +51,13 @@ public class HttpRequest {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public String getHttpVersion() {
+        return httpVersion;
+    }
+
+    public void setHttpVersion(String httpVersion) {
+        this.httpVersion = httpVersion;
     }
 }
