@@ -7,18 +7,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RequestParser {
-
-    public static HttpRequest parse(Deque<String> rawRequest) {
+    public HttpRequest parse(Deque<String> rawRequest) {
         String[] firstLine = rawRequest.pop().split("\\s");
         Map<String, String> headers = new HashMap<>();
         while (!rawRequest.isEmpty()) {
-            String header = rawRequest.pop();
-            if (header.isEmpty())
+            String line = rawRequest.pop();
+            if (line.isEmpty())
                 continue;
-            String key = header.substring(0, header.indexOf(":"));
-            String value = header.substring(header.indexOf(":") + 2);
-            headers.put(key, value);
-            if (key.equals("Content-Length"))
+            String[] header = line.split(": ");
+            headers.put(header[0], header[1]);
+            if (header[0].equals("Content-Length"))
                 break;
         }
         StringBuilder body = new StringBuilder();

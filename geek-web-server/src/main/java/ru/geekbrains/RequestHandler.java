@@ -14,32 +14,39 @@ public class RequestHandler implements Runnable {
 
     private final SocketService socketService;
     private final FileService fileService;
+    private final RequestParser requestParser;
+    private final ResponseSerializer responseSerializer;
 
-    public RequestHandler(SocketService socketService, FileService fileService) {
+    public RequestHandler(SocketService socketService,
+                          FileService fileService,
+                          RequestParser requestParser,
+                          ResponseSerializer responseSerializer) {
         this.socketService = socketService;
         this.fileService = fileService;
+        this.requestParser = requestParser;
+        this.responseSerializer = responseSerializer;
     }
 
     @Override
     public void run() {
         Deque<String> rawRequest = socketService.readRequest();
-        HttpRequest request = RequestParser.parse(rawRequest);
+        HttpRequest request = requestParser.parse(rawRequest);
 
         if (!fileService.exists(request.getPath())) {
-            response(404, "<h1>Файл не найден!</h1>");
+            response(404, "NOT_FOUND", "<h1>Файл не найден!</h1>");
             return;
         }
         if (fileService.isDirectory(request.getPath())) {
-            response(500, "<h1>Указанный путь является директорией!</h1>");
+            response(500, "Internal Server Error", "<h1>Указанный путь является директорией!</h1>");
             return;
         }
-        response(200, fileService.readFile(request.getPath()));
+        response(200, "OK",  fileService.readFile(request.getPath()));
     }
 
-    private void response(int code, String body) {
+    private void response(int code, String codeName, String body) {
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "text/html; charset=utf-8\n");
-        String rawResponse = ResponseSerializer.serialize(HttpResponse.create(code, body, headers));
+        String rawResponse = responseSerializer.serialize(HttpResponse.create(code, codeName, body, headers));
         socketService.writeResponse(rawResponse);
         try {
             socketService.close();
