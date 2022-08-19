@@ -23,6 +23,12 @@ public class RequestParser {
         while (!rawRequest.isEmpty()) {
             body.append(rawRequest.pop());
         }
-        return new HttpRequest(firstLine[0], firstLine[1], firstLine[2], headers, body.toString());
+        return HttpRequest.createBuilder()
+                .withMethod(firstLine[0])
+                .withPath(firstLine[1])
+                .withHttpVersion(firstLine[2])
+                .withHeaders(headers)
+                .withBody(body.toString())
+                .build();
     }
 }
