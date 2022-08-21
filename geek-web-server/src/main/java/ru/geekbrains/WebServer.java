@@ -1,9 +1,7 @@
 package ru.geekbrains;
 
 import ru.geekbrains.config.ServerConfig;
-import ru.geekbrains.config.ServerConfigFactory;
-import ru.geekbrains.service.FileService;
-import ru.geekbrains.service.SocketService;
+import ru.geekbrains.service.*;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -11,25 +9,52 @@ import java.net.Socket;
 
 public class WebServer {
 
-    public static void main(String[] args) {
-        ServerConfig config = ServerConfigFactory.create(args);
+    public static Builder createBuilder() {
+        return new Builder();
+    }
 
-        try (ServerSocket serverSocket = new ServerSocket(config.getPort())) {
-            System.out.println("Server started!");
+    static class Builder {
 
-            while (true) {
-                Socket socket = serverSocket.accept();
-                System.out.println("New client connected!");
+        private ServerConfig serverConfig;
+        private RequestParser requestParser;
+        private ResponseSerializer responseSerializer;
 
-                new Thread(new RequestHandler(
-                        new SocketService(socket),
-                        new FileService(config.getWww()),
-                        new RequestParser(),
-                        new ResponseSerializer()
-                )).start();
+        public Builder() {
+        }
+
+        public Builder withServerConfig(ServerConfig serverConfig) {
+            this.serverConfig = serverConfig;
+            return this;
+        }
+
+        public Builder withRequestParser(RequestParser requestParser) {
+            this.requestParser = requestParser;
+            return this;
+        }
+
+        public Builder withResponseSerializer(ResponseSerializer responseSerializer) {
+            this.responseSerializer = responseSerializer;
+            return this;
+        }
+
+        public void build() {
+            try (ServerSocket serverSocket = new ServerSocket(serverConfig.getPort())) {
+                System.out.println("Server started!");
+
+                while (true) {
+                    Socket socket = serverSocket.accept();
+                    System.out.println("New client connected!");
+
+                    new Thread(new RequestHandler(
+                            SocketServiceFactory.create(socket),
+                            FileServiceFactory.create(serverConfig.getWww()),
+                            requestParser,
+                            responseSerializer
+                    )).start();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }

@@ -17,21 +17,6 @@ public class Person {
     private Person() {
     }
 
-    public Person(String firstname, String lastname, LocalDate birthdate, String gender, String profession) {
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.birthdate = birthdate;
-        this.gender = gender;
-        this.profession = profession;
-    }
-
-    public Person(String firstname, String lastname, LocalDate birthdate, String gender) {
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.birthdate = birthdate;
-        this.gender = gender;
-    }
-
     public String getFirstname() {
         return firstname;
     }

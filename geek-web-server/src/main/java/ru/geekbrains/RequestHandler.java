@@ -40,13 +40,19 @@ public class RequestHandler implements Runnable {
             response(500, "Internal Server Error", "<h1>Указанный путь является директорией!</h1>");
             return;
         }
-        response(200, "OK",  fileService.readFile(request.getPath()));
+        response(200, "OK", fileService.readFile(request.getPath()));
     }
 
     private void response(int code, String codeName, String body) {
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "text/html; charset=utf-8\n");
-        String rawResponse = responseSerializer.serialize(HttpResponse.create(code, codeName, body, headers));
+        HttpResponse httpResponse = HttpResponse.createBuilder()
+                .withStatusCode(code)
+                .withStatusCodeName(codeName)
+                .withBody(body)
+                .withHeaders(headers)
+                .build();
+        String rawResponse = responseSerializer.serialize(httpResponse);
         socketService.writeResponse(rawResponse);
         try {
             socketService.close();
