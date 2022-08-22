@@ -1,4 +1,4 @@
-package ru.geekbrains.abstract_factory;
+package ru.geekbrains.creational.abstract_factory;
 
 public class MercedesCarFactory implements CarFactory{
     @Override

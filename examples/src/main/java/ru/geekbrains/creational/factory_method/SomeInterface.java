@@ -1,4 +1,4 @@
-package ru.geekbrains.factory_method;
+package ru.geekbrains.creational.factory_method;
 
 public interface SomeInterface {
 
