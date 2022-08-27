@@ -1,4 +1,4 @@
-package ru.geekbrains.builder;
+package ru.geekbrains.creational.builder;
 
 import java.time.LocalDate;
 

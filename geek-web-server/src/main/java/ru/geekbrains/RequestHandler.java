@@ -2,8 +2,7 @@ package ru.geekbrains;
 
 import ru.geekbrains.domain.HttpRequest;
 import ru.geekbrains.domain.HttpResponse;
-import ru.geekbrains.service.FileService;
-import ru.geekbrains.service.SocketService;
+import ru.geekbrains.service.*;
 
 import java.io.IOException;
 import java.util.Deque;
@@ -32,33 +31,29 @@ public class RequestHandler implements Runnable {
         Deque<String> rawRequest = socketService.readRequest();
         HttpRequest request = requestParser.parse(rawRequest);
 
+        ResponseService responseService = new ResponseGetService(responseSerializer, socketService);
+        switch (request.getMethod()) {
+            case "POST":
+                responseService = new ResponsePostService(responseService);
+                break;
+            case "PUT":
+                responseService = new ResponsePutService(responseService);
+                break;
+            case "DELETE":
+                responseService = new ResponseDeleteService(responseService);
+                break;
+            default:
+                break;
+        }
+        
         if (!fileService.exists(request.getPath())) {
-            response(404, "NOT_FOUND", "<h1>Файл не найден!</h1>");
+            responseService.response(request, 404, "NOT_FOUND", "<h1>Файл не найден!</h1>");
             return;
         }
         if (fileService.isDirectory(request.getPath())) {
-            response(500, "Internal Server Error", "<h1>Указанный путь является директорией!</h1>");
+            responseService.response(request, 500, "Internal Server Error", "<h1>Указанный путь является директорией!</h1>");
             return;
         }
-        response(200, "OK", fileService.readFile(request.getPath()));
-    }
-
-    private void response(int code, String codeName, String body) {
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Content-Type", "text/html; charset=utf-8\n");
-        HttpResponse httpResponse = HttpResponse.createBuilder()
-                .withStatusCode(code)
-                .withStatusCodeName(codeName)
-                .withBody(body)
-                .withHeaders(headers)
-                .build();
-        String rawResponse = responseSerializer.serialize(httpResponse);
-        socketService.writeResponse(rawResponse);
-        try {
-            socketService.close();
-        } catch (IOException ex) {
-            throw new IllegalStateException(ex);
-        }
-        System.out.println("Client disconnected!");
+        responseService.response(request, 200, "OK", fileService.readFile(request.getPath()));
     }
 }
