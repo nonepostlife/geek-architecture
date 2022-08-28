@@ -1,6 +1,7 @@
 package ru.geekbrains;
 
 import ru.geekbrains.config.ServerConfig;
+import ru.geekbrains.handler.MethodHandlerFactory;
 import ru.geekbrains.service.*;
 
 import java.io.IOException;
@@ -45,11 +46,12 @@ public class WebServer {
                     Socket socket = serverSocket.accept();
                     System.out.println("New client connected!");
 
+                    SocketService socketService = SocketServiceFactory.create(socket);
+
                     new Thread(new RequestHandler(
-                            SocketServiceFactory.create(socket),
-                            FileServiceFactory.create(serverConfig.getWww()),
+                            socketService,
                             requestParser,
-                            responseSerializer
+                            MethodHandlerFactory.create(socketService, new ResponseSerializer(), serverConfig, FileServiceFactory.create(serverConfig.getWww()))
                     )).start();
                 }
             } catch (IOException e) {

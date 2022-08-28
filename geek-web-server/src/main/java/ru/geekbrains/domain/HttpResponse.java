@@ -1,5 +1,6 @@
 package ru.geekbrains.domain;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class HttpResponse {
@@ -7,7 +8,7 @@ public class HttpResponse {
     private int statusCode;
     private String statusCodeName;
     private String body;
-    private Map<String, String> headers;
+    private Map<String, String> headers = new HashMap<>();;
 
     public HttpResponse() {
     }
@@ -47,6 +48,11 @@ public class HttpResponse {
 
         public Builder withStatusCodeName(String statusCodeName) {
             this.httpResponse.statusCodeName = statusCodeName;
+            return this;
+        }
+
+        public Builder withHeader(String key, String value) {
+            this.httpResponse.getHeaders().put(key, value);
             return this;
         }
 

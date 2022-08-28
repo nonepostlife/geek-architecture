@@ -5,7 +5,7 @@ import java.util.Map;
 public class HttpRequest {
 
     private String method;
-    private String path;
+    private String url;
     private String httpVersion;
     private Map<String, String> headers;
     private String body;
@@ -17,8 +17,8 @@ public class HttpRequest {
         return method;
     }
 
-    public String getPath() {
-        return path;
+    public String getUrl() {
+        return url;
     }
 
     public Map<String, String> getHeaders() {
@@ -50,8 +50,8 @@ public class HttpRequest {
             return this;
         }
 
-        public Builder withPath(String path) {
-            this.httpRequest.path = path;
+        public Builder withPath(String url) {
+            this.httpRequest.url = url;
             return this;
         }
 
