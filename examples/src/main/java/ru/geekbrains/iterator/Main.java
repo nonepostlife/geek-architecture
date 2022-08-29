@@ -7,7 +7,6 @@ public class Main {
     public static void main(String[] args) {
 
         Iterable<String> strings = new Iterable<>() {
-
             @Override
             public Iterator<String> iterator() {
                 return new Iterator<>() {
@@ -28,10 +27,13 @@ public class Main {
                 };
             }
         };
-
         for (String str : strings) {
             System.out.println(str);
         }
 
+        RandomNum randomNum = new RandomNum(5, 1, 100);
+        for (int i : randomNum) {
+            System.out.println(i);
+        }
     }
 }

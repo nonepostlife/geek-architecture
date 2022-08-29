@@ -51,7 +51,8 @@ public class WebServer {
                     new Thread(new RequestHandler(
                             socketService,
                             requestParser,
-                            MethodHandlerFactory.create(socketService, new ResponseSerializer(), serverConfig, FileServiceFactory.create(serverConfig.getWww()))
+//                            MethodHandlerFactory.create(socketService, new ResponseSerializer(), serverConfig, FileServiceFactory.create(serverConfig.getWww()))
+                            MethodHandlerFactory.createAnnotated(socketService, new ResponseSerializer(), serverConfig, FileServiceFactory.create(serverConfig.getWww()))
                     )).start();
                 }
             } catch (IOException e) {

@@ -1,5 +1,20 @@
 package ru.geekbrains;
 
+import ru.geekbrains.behavioral.chains.Account;
+import ru.geekbrains.behavioral.chains.Bank;
+import ru.geekbrains.behavioral.chains.Bitcoin;
+import ru.geekbrains.behavioral.chains.Paypal;
+import ru.geekbrains.behavioral.command.Bulb;
+import ru.geekbrains.behavioral.command.RemoteControl;
+import ru.geekbrains.behavioral.command.TurnOff;
+import ru.geekbrains.behavioral.command.TurnOn;
+import ru.geekbrains.behavioral.mediator.ChatRoom;
+import ru.geekbrains.behavioral.mediator.ChatRoomMediator;
+import ru.geekbrains.behavioral.mediator.User;
+import ru.geekbrains.behavioral.state.Default;
+import ru.geekbrains.behavioral.state.Editor;
+import ru.geekbrains.behavioral.state.LowerCase;
+import ru.geekbrains.behavioral.state.UpperCase;
 import ru.geekbrains.structural.adapter.AsianLion;
 import ru.geekbrains.structural.adapter.Hunter;
 import ru.geekbrains.structural.adapter.Lion;
@@ -74,5 +89,34 @@ public class Main {
         door.open("12431");
         door.open("1234qwerty");
         door.close();
+
+        //chains
+        Account bank = new Bank(100);
+        Account paypal = new Paypal(200);
+        Account bitcoin = new Bitcoin(300);
+        bank.setNext(paypal);
+        paypal.setNext(bitcoin);
+        bank.pay(125);
+
+        //command
+        Bulb bulb = new Bulb();
+        RemoteControl remoteControl = new RemoteControl();
+        remoteControl.submit(new TurnOn(bulb));
+        remoteControl.submit(new TurnOff(bulb));
+
+        //mediator
+        ChatRoomMediator chatRoomMediator = new ChatRoom();
+        User josh = new User("John", chatRoomMediator);
+        User jane = new User("Mary", chatRoomMediator);
+        jane.sendMessage("Hello");
+        josh.sendMessage("Hello");
+
+        //state
+        Editor editor = new Editor(new Default());
+        editor.type("Hello");
+        editor.setState(new LowerCase());
+        editor.type("Hello");
+        editor.setState(new UpperCase());
+        editor.type("Hello");
     }
 }
