@@ -4,12 +4,13 @@ import ru.geekbrains.ResponseSerializer;
 import ru.geekbrains.config.ServerConfig;
 import ru.geekbrains.domain.HttpRequest;
 import ru.geekbrains.domain.HttpResponse;
+import ru.geekbrains.service.FileService;
 import ru.geekbrains.service.SocketService;
 
 @Handler(method = "PUT", order = 2)
 class PutMethodHandler extends MethodHandlerImpl {
 
-    public PutMethodHandler(MethodHandlerImpl next, SocketService socketService, ResponseSerializer responseSerializer, ServerConfig config) {
+    public PutMethodHandler(MethodHandlerImpl next, SocketService socketService, ResponseSerializer responseSerializer, ServerConfig config, FileService fileService) {
         super("PUT", next, socketService, responseSerializer, config);
     }
 

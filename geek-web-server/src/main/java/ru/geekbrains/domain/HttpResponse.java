@@ -8,7 +8,8 @@ public class HttpResponse {
     private int statusCode;
     private String statusCodeName;
     private String body;
-    private Map<String, String> headers = new HashMap<>();;
+    private Map<String, String> headers = new HashMap<>();
+    ;
 
     public HttpResponse() {
     }
@@ -67,6 +68,9 @@ public class HttpResponse {
         }
 
         public HttpResponse build() {
+            if (this.httpResponse.statusCodeName == null) {
+                throw new IllegalStateException("Status code not defined");
+            }
             return httpResponse;
         }
     }
