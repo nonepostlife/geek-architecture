@@ -1,6 +1,7 @@
 package ru.geekbrains;
 
 import ru.geekbrains.config.ServerConfig;
+import ru.geekbrains.handler.AnnotatedMethodHandlerFactory;
 import ru.geekbrains.handler.MethodHandlerFactory;
 import ru.geekbrains.service.*;
 
@@ -51,8 +52,7 @@ public class WebServer {
                     new Thread(new RequestHandler(
                             socketService,
                             requestParser,
-//                            MethodHandlerFactory.create(socketService, new ResponseSerializer(), serverConfig, FileServiceFactory.create(serverConfig.getWww()))
-                            MethodHandlerFactory.createAnnotated(socketService, new ResponseSerializer(), serverConfig, FileServiceFactory.create(serverConfig.getWww()))
+                            AnnotatedMethodHandlerFactory.create(socketService, new ResponseSerializer(), FileServiceFactory.create(serverConfig.getWww()))
                     )).start();
                 }
             } catch (IOException e) {

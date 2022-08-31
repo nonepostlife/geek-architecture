@@ -10,20 +10,17 @@ abstract class MethodHandlerImpl implements MethodHandler {
 
     private final String method;
 
-    private final MethodHandlerImpl next;
+    private final MethodHandler next;
 
     protected final SocketService socketService;
 
     protected final ResponseSerializer responseSerializer;
 
-    protected final ServerConfig config;
-
-    public MethodHandlerImpl(String method, MethodHandlerImpl next, SocketService socketService, ResponseSerializer responseSerializer, ServerConfig config) {
+    public MethodHandlerImpl(String method, MethodHandler next, SocketService socketService, ResponseSerializer responseSerializer) {
         this.method = method;
         this.next = next;
         this.socketService = socketService;
         this.responseSerializer = responseSerializer;
-        this.config = config;
     }
 
     @Override

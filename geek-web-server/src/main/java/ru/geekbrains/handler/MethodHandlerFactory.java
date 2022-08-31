@@ -12,10 +12,10 @@ import java.util.stream.Collectors;
 
 public final class MethodHandlerFactory {
 
-    public static MethodHandler create(SocketService socketService, ResponseSerializer responseSerializer, ServerConfig config, FileService fileService) {
-        PutMethodHandler putHandler = new PutMethodHandler(null, socketService, responseSerializer, config, fileService);
-        PostMethodHandler postHandler = new PostMethodHandler(putHandler, socketService, responseSerializer, config, fileService);
-        return new GetMethodHandler(postHandler, socketService, responseSerializer, config, fileService);
+    public static MethodHandler create(SocketService socketService, ResponseSerializer responseSerializer, FileService fileService) {
+        PutMethodHandler putHandler = new PutMethodHandler(null, socketService, responseSerializer, fileService);
+        PostMethodHandler postHandler = new PostMethodHandler(putHandler, socketService, responseSerializer, fileService);
+        return new GetMethodHandler(postHandler, socketService, responseSerializer, fileService);
     }
 
     public static MethodHandler createAnnotated(SocketService socketService, ResponseSerializer responseSerializer, ServerConfig config, FileService fileService) {

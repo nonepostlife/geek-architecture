@@ -12,8 +12,8 @@ public class StrategyMethodHandler extends MethodHandlerImpl {
 
     private final Function<HttpRequest, HttpResponse> strategy;
 
-    public StrategyMethodHandler(Function<HttpRequest, HttpResponse> strategy, String method, MethodHandlerImpl next, SocketService socketService, ResponseSerializer responseSerializer, ServerConfig config) {
-        super(method, next, socketService, responseSerializer, config);
+    public StrategyMethodHandler(Function<HttpRequest, HttpResponse> strategy, String method, MethodHandlerImpl next, SocketService socketService, ResponseSerializer responseSerializer) {
+        super(method, next, socketService, responseSerializer);
         this.strategy = strategy;
     }
 
