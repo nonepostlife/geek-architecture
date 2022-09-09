@@ -1,10 +1,11 @@
 package ru.geekbrains.handler;
 
 import ru.geekbrains.ResponseSerializer;
-import ru.geekbrains.config.ServerConfig;
 import ru.geekbrains.domain.HttpRequest;
 import ru.geekbrains.domain.HttpResponse;
 import ru.geekbrains.service.SocketService;
+
+import static ru.geekbrains.handler.ResponseStatus.*;
 
 abstract class MethodHandlerImpl implements MethodHandler {
 
@@ -33,8 +34,8 @@ abstract class MethodHandlerImpl implements MethodHandler {
             return;
         } else {
             response = HttpResponse.createBuilder()
-                    .withStatusCode(405)
-                    .withStatusCodeName("METHOD_NOT_ALLOWED")
+                    .withStatusCode(METHOD_NOT_ALLOWED.getCode())
+                    .withStatusCodeName(METHOD_NOT_ALLOWED.getName())
                     .withHeader("Content-Type", "text/html; charset=utf-8")
                     .withBody("<h1>Метод не поддерживается!</h1>")
                     .build();

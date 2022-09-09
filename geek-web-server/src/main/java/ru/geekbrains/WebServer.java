@@ -2,7 +2,6 @@ package ru.geekbrains;
 
 import ru.geekbrains.config.ServerConfig;
 import ru.geekbrains.handler.AnnotatedMethodHandlerFactory;
-import ru.geekbrains.handler.MethodHandlerFactory;
 import ru.geekbrains.service.*;
 
 import java.io.IOException;
