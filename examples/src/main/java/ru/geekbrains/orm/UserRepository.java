@@ -18,27 +18,29 @@ public class UserRepository {
     }
 
     public Optional<User> findById(long id) {
-        return Optional.empty();
+        return mapper.findById(id);
     }
 
     public void beginTransaction() {
-
+        if (unitOfWork.isChanged()) {
+            throw new IllegalStateException("Cannot start transaction, there are uncommitted changes!");
+        }
     }
 
     public void insert(User user) {
-
+        unitOfWork.registerNew(user);
     }
 
     public void update(User user) {
-
+        unitOfWork.registerUpdate(user);
     }
 
     public void delete(User user) {
-
+        unitOfWork.registerDelete(user);
     }
 
     public void commitTransaction() {
-
+        unitOfWork.commit();
     }
 
     public void rollbackTransaction() {
